@@ -1,5 +1,12 @@
 # PyDNSSEC Prover
 
+> **⚠️ WARNING: This is a Work In Progress (WIP)**
+> 
+> This Python port is still under active development and may have bugs or incomplete features. 
+> The API is not yet stable and may change between versions. Use at your own risk.
+> 
+> For production use, consider using the original Rust implementation: [dnssec-prover](https://github.com/TheBlueMatt/dnssec-prover)
+
 A Python port of [dnssec-prover](https://github.com/TheBlueMatt/dnssec-prover): DNSSEC validation based on RFC 9102 proofs. This library provides offline DNSSEC validation capabilities.
 
 > **Note**: This is a Python port of the original Rust implementation by [Matt Corallo](https://github.com/TheBlueMatt). The original Rust crate can be found at [TheBlueMatt/dnssec-prover](https://github.com/TheBlueMatt/dnssec-prover).
