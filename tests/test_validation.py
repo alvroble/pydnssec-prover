@@ -702,7 +702,8 @@ def test_verify_byte_stream():
             print(f"   Max cache TTL: {result['max_cache_ttl']}")
             print(f"   Verified records: {len(result['verified_rrs'])}")
             for rr in result['verified_rrs']:
-                print(f"     - {rr['type'].upper()}: {rr['name']}")
+                print(rr)
+
     
     print("\n✅ verify_byte_stream test completed")
 

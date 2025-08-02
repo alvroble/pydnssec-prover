@@ -516,17 +516,81 @@ def _do_verify_byte_stream(stream: bytes, name_to_resolve: Name) -> str:
             try:
                 verified_rrs_json.append(json.loads(record.to_json()))
             except Exception as e:
-                # Fallback for records with to_json errors
-                verified_rrs_json.append({
+                # Fallback for records with to_json errors - include record-specific data
+                record_data = {
                     "type": type(record).__name__.lower(),
                     "name": str(record.name)
-                })
+                }
+                
+                # Add record-specific content based on type
+                if hasattr(record, 'data'):
+                    # TXT records
+                    data = record.data
+                    if all(0x20 <= b <= 0x7e for b in data):
+                        try:
+                            record_data["contents"] = data.decode('utf-8')
+                        except UnicodeDecodeError:
+                            record_data["contents"] = list(data)
+                    else:
+                        record_data["contents"] = list(data)
+                elif hasattr(record, 'address'):
+                    # A/AAAA records
+                    record_data["address"] = record.address
+                elif hasattr(record, 'target'):
+                    # NS records
+                    record_data["target"] = str(record.target)
+                elif hasattr(record, 'canonical_name'):
+                    # CNAME records
+                    record_data["canonical_name"] = str(record.canonical_name)
+                elif hasattr(record, 'delegation_name'):
+                    # DNAME records
+                    record_data["delegation_name"] = str(record.delegation_name)
+                elif hasattr(record, 'next_name'):
+                    # NSEC records
+                    record_data["next_name"] = str(record.next_name)
+                elif hasattr(record, 'next_name_hash'):
+                    # NSEC3 records
+                    record_data["next_name_hash"] = list(record.next_name_hash)
+                
+                verified_rrs_json.append(record_data)
         else:
-            # Fallback for records without to_json method
-            verified_rrs_json.append({
+            # Fallback for records without to_json method - include record-specific data
+            record_data = {
                 "type": type(record).__name__.lower(),
                 "name": str(record.name)
-            })
+            }
+            
+            # Add record-specific content based on type
+            if hasattr(record, 'data'):
+                # TXT records
+                data = record.data
+                if all(0x20 <= b <= 0x7e for b in data):
+                    try:
+                        record_data["contents"] = data.decode('utf-8')
+                    except UnicodeDecodeError:
+                        record_data["contents"] = list(data)
+                else:
+                    record_data["contents"] = list(data)
+            elif hasattr(record, 'address'):
+                # A/AAAA records
+                record_data["address"] = record.address
+            elif hasattr(record, 'target'):
+                # NS records
+                record_data["target"] = str(record.target)
+            elif hasattr(record, 'canonical_name'):
+                # CNAME records
+                record_data["canonical_name"] = str(record.canonical_name)
+            elif hasattr(record, 'delegation_name'):
+                # DNAME records
+                record_data["delegation_name"] = str(record.delegation_name)
+            elif hasattr(record, 'next_name'):
+                # NSEC records
+                record_data["next_name"] = str(record.next_name)
+            elif hasattr(record, 'next_name_hash'):
+                # NSEC3 records
+                record_data["next_name_hash"] = list(record.next_name_hash)
+            
+            verified_rrs_json.append(record_data)
     
     result = {
         "valid_from": verified_rrs.valid_from,
