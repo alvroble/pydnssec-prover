@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pydnssec-prover"
+version = "0.1.0"
+description = "A Python port of dnssec-prover: DNSSEC validation based on RFC 9102 proofs"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+maintainers = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers", 
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: Name Service (DNS)",
+    "Topic :: Security :: Cryptography",
+]
+keywords = ["dns", "dnssec", "cryptography", "validation", "rfc9102"]
+requires-python = ">=3.8"
+dependencies = []
+
+[project.optional-dependencies]
+test = [
+    "pytest>=6.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/pydnssec-prover"
+Repository = "https://github.com/yourusername/pydnssec-prover"
+Issues = "https://github.com/yourusername/pydnssec-prover/issues"
+"Original Rust Implementation" = "https://github.com/TheBlueMatt/dnssec-prover"
+Documentation = "https://docs.rs/dnssec-prover"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"] 
