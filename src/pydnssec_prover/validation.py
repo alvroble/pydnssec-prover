@@ -504,17 +504,23 @@ def _do_verify_byte_stream(stream: bytes, name_to_resolve: Name) -> str:
     # Verify the RR stream  
     verified_rrs = verify_rr_stream(rrs)
     
-    # Resolve the name (following CNAMEs/DNAMEs)
-    resolved_rrs = verified_rrs.resolve_name(name_to_resolve)
+    # Return all verified records (not just the ones matching the resolved name)
     
     # Format as JSON
     import json
     
     verified_rrs_json = []
-    for record in resolved_rrs:
+    for record in verified_rrs.verified_rrs:
         # Convert record to JSON (assuming records have a to_json method)
         if hasattr(record, 'to_json'):
-            verified_rrs_json.append(json.loads(record.to_json()))
+            try:
+                verified_rrs_json.append(json.loads(record.to_json()))
+            except Exception as e:
+                # Fallback for records with to_json errors
+                verified_rrs_json.append({
+                    "type": type(record).__name__.lower(),
+                    "name": str(record.name)
+                })
         else:
             # Fallback for records without to_json method
             verified_rrs_json.append({
