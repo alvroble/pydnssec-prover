@@ -25,7 +25,7 @@ from .validation import (
     ValidationError,
     VerifiedRRStream,
     resolve_time,
-    MAX_PROOF_STEPS
+    verify_byte_stream
 )
 
 from .rr import (
@@ -41,29 +41,26 @@ from .rr import (
     DnsKey,
     DS,
     RRSig,
-    RR,
-    NsecTypeBitmask,
     NSec,
     NSec3,
-    Soa,
-    MX,
-    write_name,
-    read_name,
-    parse_rr,
-    RRType,
-    RRData,
-    NsecType
+    NSecTypeMask,
+    parse_rr_stream,
+    write_rr
 )
 
 from .base32 import (
     encode,
-    decode,
-    Alphabet
+    decode
 )
 
 from .ser import (
-    Writer,
-    Reader
+    SerializationError,
+    read_u8,
+    read_u16,
+    read_u32,
+    read_wire_packet_name,
+    write_name,
+    name_len
 )
 
 __version__ = "0.1.0"
@@ -83,7 +80,7 @@ __all__ = [
     "ValidationError",
     "VerifiedRRStream",
     "resolve_time",
-    "MAX_PROOF_STEPS",
+    "verify_byte_stream",
     
     # DNS record types
     "Name",
@@ -98,25 +95,22 @@ __all__ = [
     "DnsKey",
     "DS",
     "RRSig",
-    "RR",
-    "NsecTypeBitmask",
     "NSec",
     "NSec3",
-    "Soa",
-    "MX",
-    "write_name",
-    "read_name",
-    "parse_rr",
-    "RRType",
-    "RRData",
-    "NsecType",
+    "NSecTypeMask",
+    "parse_rr_stream",
+    "write_rr",
     
     # Base32 functions
     "encode",
     "decode", 
-    "Alphabet",
     
     # Serialization
-    "Writer",
-    "Reader",
+    "SerializationError",
+    "read_u8",
+    "read_u16",
+    "read_u32",
+    "read_wire_packet_name",
+    "write_name",
+    "name_len",
 ] 

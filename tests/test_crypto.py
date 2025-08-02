@@ -6,15 +6,11 @@ import os
 import json
 import pytest
 from typing import Optional, Callable
-import sys
 
-# Add the parent directory to path to import crypto module
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-
-from crypto.secp256r1 import validate_ecdsa as validate_256r1
-from crypto.secp384r1 import validate_ecdsa as validate_384r1
-from crypto.rsa import validate_rsa
-from crypto.hash import Hasher, HashResult
+from pydnssec_prover.crypto.secp256r1 import validate_ecdsa as validate_256r1
+from pydnssec_prover.crypto.secp384r1 import validate_ecdsa as validate_384r1
+from pydnssec_prover.crypto.rsa import validate_rsa
+from pydnssec_prover.crypto.hash import Hasher, HashResult
 
 
 def open_file(name: str):
