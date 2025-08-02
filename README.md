@@ -12,7 +12,7 @@ A Python port of [dnssec-prover](https://github.com/TheBlueMatt/dnssec-prover): 
 - Support for RSA and ECDSA signatures
 - **Minimal dependencies** - uses only Python standard library
 - Comprehensive test suite
-- Python port of the battle-tested Rust implementation
+- Python port of the Rust implementation
 
 ## Background
 
@@ -34,7 +34,7 @@ pip install pydnssec-prover
 ### From Source
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/alvroble/pydnssec-prover
 cd pydnssec-prover
 pip install -e .
 ```
@@ -42,38 +42,83 @@ pip install -e .
 ### Development Installation
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/alvroble/pydnssec-prover
 cd pydnssec-prover
 pip install -e ".[test]"
 ```
 
 ## Usage
 
-```python
-from pydnssec_prover import verify_rr_stream, ValidationError
+The main entry point is the `verify_byte_stream` function, which takes an RFC 9102 DNSSEC proof and returns verification results:
 
-try:
-    # Verify a DNS record stream
-    verified_stream = verify_rr_stream(proof_data, queries)
-    print("Validation successful!")
-except ValidationError as e:
-    print(f"Validation failed: {e}")
+```python
+from pydnssec_prover import verify_byte_stream
+import json
+
+# Example RFC 9102 proof bytes (you would get this from a DNSSEC-enabled resolver)
+proof_bytes = bytes.fromhex("00002e000100002bb3...")  # Your proof data here
+
+# Verify the proof and resolve a specific name
+result_json = verify_byte_stream(proof_bytes, "example.com.")
+
+# Parse the JSON result
+result = json.loads(result_json)
+
+if "error" in result:
+    print(f"Validation failed: {result['error']}")
+else:
+    print(f"✅ Validation successful!")
+    print(f"Valid from: {result['valid_from']}")
+    print(f"Expires: {result['expires']}")
+    print(f"Max cache TTL: {result['max_cache_ttl']}")
+    print(f"Verified records: {len(result['verified_rrs'])}")
+    
+    # Display the verified records
+    for record in result['verified_rrs']:
+        print(f"  - {record['type'].upper()}: {record['name']}")
 ```
 
 ## API Reference
 
-### Main Functions
+### Main Function
 
-- `verify_rr_stream(proof, queries)` - Verify a stream of DNS resource records
-- `verify_rrsig(rrsig, rrset, dnskey)` - Verify an RRSIG record
-- `verify_rr_set(rrset, rrsigs, dnskeys)` - Verify a set of resource records
+- `verify_byte_stream(proof_bytes: bytes, name_to_resolve: str) -> str`
+  - **proof_bytes**: RFC 9102 DNSSEC proof as bytes
+  - **name_to_resolve**: Domain name to resolve (e.g., "example.com.")
+  - **Returns**: JSON string with verification results or error information
 
-### Classes
+### Response Format
 
+**Success Response:**
+```json
+{
+  "valid_from": 1234567890,
+  "expires": 1234567890,
+  "max_cache_ttl": 3600,
+  "verified_rrs": [
+    {
+      "type": "txt",
+      "name": "example.com."
+    }
+  ]
+}
+```
+
+**Error Response:**
+```json
+{
+  "error": "invalid"
+}
+```
+
+### Lower-level APIs
+
+For advanced usage, you can also use the lower-level functions:
+
+- `verify_rr_stream(records: List[Record]) -> VerifiedRRStream` - Verify a list of DNS records
 - `ValidationError` - Exception raised when validation fails
-- `VerifiedRRStream` - Container for verified DNS records
 - `Name` - DNS name representation
-- `RR` - DNS resource record representation
+- `Record` - DNS resource record representation
 
 ## Development
 
