@@ -157,7 +157,6 @@ This library has **zero runtime dependencies** and uses only Python's standard l
 ## Credits
 
 - **Original Rust Implementation**: [Matt Corallo](https://github.com/TheBlueMatt) ([dnssec-prover](https://github.com/TheBlueMatt/dnssec-prover))
-- **Python Port**: [Your Name]
 
 ## Related Projects
 
